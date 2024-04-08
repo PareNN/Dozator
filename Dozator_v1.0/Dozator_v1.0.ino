@@ -53,6 +53,7 @@ void setup() {
   if (litr_m > 60) EEPROM.write(1, 30);
 
   lcd.init();           // инициализация LCD
+  lcd.backlight();                // включаем подсветку
   lcd.clear();          // очистка дисплея
   lcd.setCursor(0, 0);  // устанавливаем курсор
   lcd.print("     Dozator    ");
