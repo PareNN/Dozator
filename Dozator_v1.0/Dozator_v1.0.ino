@@ -22,16 +22,15 @@ EncButton eb(3, 4, 5);               // энкодер с кнопкой <A, B, 
 GTimer Timer_Disp(MS, 1000);   //Таймер обновления экрана
 GTimer Timer_Motor(MS, 1000);  //Таймер мотора
 
-volatile int flow_frequency;   // измеряет частоту
-int l_minute;                  // рассчитанные литр/час
-unsigned char flowsensor = 2;  // Вход сенсора
 #define motor_EN 6             //Пин подключения мотора EN
 #define L_PWM 7                //Пин подключения мотора L_PWM
 #define R_PWM 8                //Пин подключения мотора R_PWM
 
+volatile int flow_frequency;   // измеряет частоту
+int l_minute;                  // рассчитанные литр/минуту
+unsigned char flowsensor = 2;  // Вход сенсора
 unsigned long currentTime;
 unsigned long cloopTime;
-
 
 int speed = 125;
 int litr_m = EEPROM.read(1);
@@ -78,7 +77,7 @@ void loop() {
 
   currentTime = millis();
 
-  // Каждую секунду рассчитываем и выводим на экран литры в час
+  // Каждую секунду рассчитываем и выводим на экран литры в минуту
   if (currentTime >= (cloopTime + 1000)) {
     cloopTime = currentTime;  // Обновление cloopTime
     // Частота импульсов (Гц) = 7.5Q, Q - это расход в л/мин.
@@ -87,21 +86,17 @@ void loop() {
     Serial.print(l_minute, DEC);        // Отображаем л/мин
     Serial.println(" L/minute");
 
-
     if (status == 1) {
     digitalWrite(L_PWM, LOW );  // Устанавливаем логический 0 на входе драйвера L_PWM, значит на выходе драйвера M- будет установлен потенциал S-
     digitalWrite(R_PWM, HIGH);  // Устанавливаем логическую 1 на входе драйвера R_PWM, значит на выходе драйвера M+ будет установлен потенциал S+
 
-      if (Timer_Motor.isReady()) {
-        if (l_minute > litr_m) {
+    if (l_minute > litr_m) {
           if (speed > 0) --speed;
         }
-
-        if (l_minute < litr_m) {
+    if (l_minute < litr_m) {
           if (speed < 255) ++speed;
         }
         analogWrite(motor_EN, speed);
-      }
     }
     if (status == 0) analogWrite(motor_EN, 0);
     if (status == 0) digitalWrite(motor_EN,    LOW );  // Устанавливаем логический 0 на входах драйвера L_EN и R_EN, значит выходы M+ и M- перейдут в состояние высокого импеданса и мотор будет электрически отключён.
