@@ -23,9 +23,9 @@ GTimer Timer_Motor(MS, 1000);  //Таймер мотора
 volatile int flow_frequency;   // измеряет частоту
 int l_minute;                  // рассчитанные литр/час
 unsigned char flowsensor = 2;  // Вход сенсора
-#define motor_EN 6                //Пин подключения мотора
-#define L_PWM 7                //Пин подключения мотора
-#define R_PWM 8                //Пин подключения мотора
+#define motor_EN 6             //Пин подключения мотора EN
+#define L_PWM 7                //Пин подключения мотора L_PWM
+#define R_PWM 8                //Пин подключения мотора R_PWM
 
 unsigned long currentTime;
 unsigned long cloopTime;
