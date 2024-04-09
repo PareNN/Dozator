@@ -23,7 +23,10 @@ GTimer Timer_Motor(MS, 1000);  //Таймер мотора
 volatile int flow_frequency;   // измеряет частоту
 int l_minute;                  // рассчитанные литр/час
 unsigned char flowsensor = 2;  // Вход сенсора
-#define motor 6                //Пин подключения мотора
+#define motor_EN 6                //Пин подключения мотора
+#define L_PWM 7                //Пин подключения мотора
+#define R_PWM 8                //Пин подключения мотора
+
 unsigned long currentTime;
 unsigned long cloopTime;
 
@@ -40,8 +43,11 @@ void flow()  // функция прерывания
 
 void setup() {
   pinMode(flowsensor, INPUT);
-  pinMode(motor, OUTPUT);
+  pinMode(motor_EN, OUTPUT); // Конфигурируем вывод EN    как выход (выход Arduino, вход драйвера)
+  pinMode(L_PWM, OUTPUT);     // Конфигурируем вывод L_PWM как выход (выход Arduino, вход драйвера)
+  pinMode(R_PWM, OUTPUT);     // Конфигурируем вывод R_PWM как выход (выход Arduino, вход драйвера)
   digitalWrite(flowsensor, HIGH);
+  digitalWrite(motor_EN,    LOW );  // Устанавливаем логический 0 на входах драйвера L_EN и R_EN, значит выходы M+ и M- перейдут в состояние высокого импеданса и мотор будет электрически отключён.
   Serial.begin(9600);
 
   attachInterrupt(0, flow, RISING);  // настраиваем прерывания
@@ -90,9 +96,10 @@ void loop() {
         if (l_minute < litr_m) {
           if (speed < 255) ++speed;
         }
-        analogWrite(motor, speed);
+        analogWrite(motor_EN, speed);
       }
     }
-    if (status == 0) analogWrite(motor, 0);
+    if (status == 0) analogWrite(motor_EN, 0);
+    if (status == 0) digitalWrite(motor_EN,    LOW );  // Устанавливаем логический 0 на входах драйвера L_EN и R_EN, значит выходы M+ и M- перейдут в состояние высокого импеданса и мотор будет электрически отключён.
   }
 }
