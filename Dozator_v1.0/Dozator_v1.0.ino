@@ -87,6 +87,8 @@ void loop() {
 
 
     if (status == 1) {
+    digitalWrite(L_PWM, LOW );  // Устанавливаем логический 0 на входе драйвера L_PWM, значит на выходе драйвера M- будет установлен потенциал S-
+    digitalWrite(R_PWM, HIGH);  // Устанавливаем логическую 1 на входе драйвера R_PWM, значит на выходе драйвера M+ будет установлен потенциал S+
 
       if (Timer_Motor.isReady()) {
         if (l_minute > litr_m) {
