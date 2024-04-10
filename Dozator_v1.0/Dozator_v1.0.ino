@@ -20,7 +20,7 @@ EncButton eb(3, 4, 5);               // энкодер с кнопкой <A, B, 
 
 
 GTimer Timer_Disp(MS, 1000);   //Таймер обновления экрана
-GTimer Timer_Motor(MS, 1000);  //Таймер мотора
+GTimer Timer_Motor(MS, 200);  //Таймер обновления мотора
 
 #define motor_EN 6             //Пин подключения мотора EN
 #define L_PWM 7                //Пин подключения мотора L_PWM
@@ -74,19 +74,9 @@ void loop() {
   eb.tick();
   Encoder();
   if (Timer_Disp.isReady()) Display();
-
-  currentTime = millis();
-
-  // Каждую секунду рассчитываем и выводим на экран литры в минуту
-  if (currentTime >= (cloopTime + 1000)) {
-    cloopTime = currentTime;  // Обновление cloopTime
-    // Частота импульсов (Гц) = 7.5Q, Q - это расход в л/мин.
-    l_minute = (flow_frequency / 7.5);  // Частота  / 7.5Q = расход в л/минутах
-    flow_frequency = 0;                 // Сбрасываем счетчик
-    Serial.print(l_minute, DEC);        // Отображаем л/мин
-    Serial.println(" L/minute");
-
-    if (status == 1) {
+  
+  if (Timer_Motor.isReady()){
+  if (status == 1) {
     digitalWrite(L_PWM, LOW );  // Устанавливаем логический 0 на входе драйвера L_PWM, значит на выходе драйвера M- будет установлен потенциал S-
     digitalWrite(R_PWM, HIGH);  // Устанавливаем логическую 1 на входе драйвера R_PWM, значит на выходе драйвера M+ будет установлен потенциал S+
 
@@ -101,4 +91,15 @@ void loop() {
     if (status == 0) analogWrite(motor_EN, 0);
     if (status == 0) digitalWrite(motor_EN,    LOW );  // Устанавливаем логический 0 на входах драйвера L_EN и R_EN, значит выходы M+ и M- перейдут в состояние высокого импеданса и мотор будет электрически отключён.
   }
+  
+  currentTime = millis();
+  // Каждую секунду рассчитываем и выводим на экран литры в минуту
+  if (currentTime >= (cloopTime + 1000)) {
+    cloopTime = currentTime;  // Обновление cloopTime
+    // Частота импульсов (Гц) = 7.5Q, Q - это расход в л/мин.
+    l_minute = (flow_frequency / 7.5);  // Частота  / 7.5Q = расход в л/минутах
+    flow_frequency = 0;                 // Сбрасываем счетчик
+    Serial.print(l_minute, DEC);        // Отображаем л/мин
+    Serial.println(" L/minute");
+      }
 }
