@@ -34,7 +34,7 @@ unsigned long currentTime;
 unsigned long cloopTime;
 int speed = 125;
 bool status;
-float litr_m;
+float litr_m = 3.0;
 
 void flow()  // функция прерывания
 {
