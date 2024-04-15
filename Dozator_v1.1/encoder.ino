@@ -6,7 +6,7 @@ if (eb.left()) {
 }
 
 if (eb.right()) {
-  if (litr_m <=60.0) litr_m += 0.2;
+  if (litr_m <=6.0) litr_m += 0.2;
   EEPROM.put(1, litr_m);
 }
 
