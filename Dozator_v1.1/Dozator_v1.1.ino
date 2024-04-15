@@ -42,7 +42,7 @@ void flow()  // функция прерывания
 }
 
 void setup() {
-  // EEPROM.put(1, 30.0);
+  // EEPROM.put(1, 3.0);
   pinMode(flowsensor, INPUT);
   pinMode(motor_EN, OUTPUT);  // Конфигурируем вывод EN    как выход (выход Arduino, вход драйвера)
   pinMode(L_PWM, OUTPUT);     // Конфигурируем вывод L_PWM как выход (выход Arduino, вход драйвера)
@@ -63,8 +63,8 @@ void setup() {
     EEPROM.put(0, status);
   }
   EEPROM.get(1, litr_m);
-  if (litr_m > 60.0) {
-    litr_m = 30.0;
+  if (litr_m > 6.0) {
+    litr_m = 3.0;
     EEPROM.put(1, litr_m);
   }
 
